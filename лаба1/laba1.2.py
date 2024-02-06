@@ -63,8 +63,7 @@ plt.title("Полиномиальный \n$R^2=$" + str(polinom_r2) + "\n${0}x^2
 
 # !!! Текущая ячейка - 3
 plt.subplot(2, 2, 3)
-colors = np.array(["red","green","blue","yellow","pink","black","orange","purple","beige","brown","gray","cyan","magenta","gray","cyan","magenta","gray","cyan","magenta"])
-plt.scatter(numpy_x, numpy_y, [400], label = 'data', c=colors, marker="$мяу$") # точечный график по x_numpy, y_numpy
+plt.scatter(numpy_x, numpy_y, label = 'data') # точечный график по x_numpy, y_numpy
 plt.plot(numpy_x, log_trend, linestyle='dashed', color="orange", label = 'log trend') # логарифмический тренд
 plt.grid(color="gainsboro") # Сетка
 plt.legend(loc = 'best', fontsize=12) 
