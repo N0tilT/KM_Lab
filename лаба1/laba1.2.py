@@ -16,8 +16,8 @@ set_line_by_data = np.polyfit(numpy_x, numpy_y, 1) # полином первой
 linear_trend = np.poly1d(set_line_by_data) # снижение размерности до одномерного массива
 print("{0}x + {1}".format(*set_line_by_data)) # формула
 
-# полиномиальный. Делать 2 и т.д.
-set_polinom_by_data = np.polyfit(numpy_x, numpy_y, 2) # работа с полиномом 6 степени
+# полиномиальный. 
+set_polinom_by_data = np.polyfit(numpy_x, numpy_y, 6) # работа с полиномом 2 степени
 polinom_trend = np.poly1d(set_polinom_by_data) # Рассчитать значение полинома в точках x
 print("${0}x^2 + {1}x + {2}$".format(*set_polinom_by_data)) # формула
 
@@ -59,7 +59,7 @@ x = np.linspace(numpy_x.min(), numpy_x.max()) # набор данных для x
 plt.plot(x, polinom_trend(x), linestyle='dashed', color="orange", label = 'polinomial trend') # полиномиальный тренд
 plt.grid(color="gainsboro") # Сетка
 plt.legend(loc = 'best', fontsize=12, bbox_to_anchor=(1, 0.5)) 
-plt.title("Полиномиальный \n$R^2=$" + str(polinom_r2) + "\n${0}x^2 + {1}x + {2}$".format(*set_polinom_by_data))
+plt.title("Полиномиальный \n$R^6=$" + str(polinom_r2) + "\n${0}x^2 + {1}x + {2}$".format(*set_polinom_by_data))
 
 # !!! Текущая ячейка - 3
 plt.subplot(2, 2, 3)
