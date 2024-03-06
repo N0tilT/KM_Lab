@@ -8,7 +8,7 @@ k=31
 a=16807
 s=4
 step=4
-count=200000
+count=20
 m=2**k
 sum_Mat=0 #матожидание
 
@@ -24,6 +24,7 @@ for i in range(1, count):
     x=(a*values[i-1]*m%m)
     x=x/m
     sum_Mat+=x
+    print(x)
     values.append(x)
 
 plt.rcParams["figure.figsize"] = [7.50, 3.50]
