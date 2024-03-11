@@ -1,3 +1,5 @@
+from math import factorial
+
 class SMO:
 
     '''
@@ -41,7 +43,7 @@ class SMO:
         QueueLength
 
         #Вероятность образования очереди
-        ProbablityQueue
+        ProbabilityQueue
 
         #Среднее время нахождения в СМО
         SMOTime
@@ -64,19 +66,7 @@ class SMO:
         self.ProbabilityFault=1-self.ProbabilityService
         #Пропускная способность
         self.Bandwidth=self.Intensity*self.ProbabilityService
-    
-    def MultiChannelWithFail(self, ChannelCount):
-        #Вероятность обслуживания заявки
-        self.MultIntensity=self.Intensity/self.IntensityService
-        p_0=0
-        for n in range(0, ChannelCount):
-            p_0+=(self.MultIntensity**n)/SMO.factorial(n)
-        p_0=p_0**(-1)
-        self.ProbabilityService=self.Intensity/(self.Intensity+self.IntensityService)
-        self.RelativeBandwidth=self.ProbabilityService
-        self.ProbablityFault=p_0*((self.MultIntensity**ChannelCount)/SMO.factorial(ChannelCount))
-        self.Bandwidth=self.Intensity*self.RelativeBandwidth
-        self.AverageChannel=self.Bandwidth/self.IntensityService
+        
     def SingleChannelWithQueue(self, len):
         p=self.Intensity/self.IntensityService
         
@@ -86,7 +76,7 @@ class SMO:
             p_0=(1-p)/(1-(p**(len+2)))
        #Вероятность обслуживания заявки
         self.ProbabilityService=self.Intensity/(self.Intensity+self.IntensityService)
-        self.ProbablityFault=p**(len+1)*p_0
+        self.ProbabilityFault=p**(len+1)*p_0
         self.RelativeBandwidth=1-self.ProbabilityFault
         self.AverageChannel=self.RelativeBandwidth*self.Intensity
         if p==1:
@@ -99,6 +89,7 @@ class SMO:
             self.SMOTime=self.Lsmo/self.Intensity
         else:
             self.SMOTime=(len+1)/(2*self.IntensityService)
+            
     def SingleChannelWithQueueWhithoutLen(self):
         p=self.Intensity/self.IntensityService
         if p<1:
@@ -110,6 +101,20 @@ class SMO:
             self.SMOTime=self.Lsmo/self.Intensity
         else:
             self.IsStatic=False
+            
+    def MultiChannelWithFail(self, ChannelCount):
+        #Вероятность обслуживания заявки
+        self.MultIntensity=self.Intensity/self.IntensityService
+        p_0=0
+        for n in range(0, ChannelCount):
+            p_0+=(self.MultIntensity**n)/SMO.factorial(n)
+        p_0=p_0**(-1)
+        self.ProbabilityService=self.Intensity/(self.Intensity+self.IntensityService)
+        self.RelativeBandwidth=self.ProbabilityService
+        self.ProbabilityFault=p_0*((self.MultIntensity**ChannelCount)/SMO.factorial(ChannelCount))
+        self.Bandwidth=self.Intensity*self.RelativeBandwidth
+        self.AverageChannel=self.Bandwidth/self.IntensityService
+        
     def MultiChannelWithQueue(self, count,len):
         p=self.Intensity/self.IntensityService
         
@@ -125,7 +130,7 @@ class SMO:
                 p_0+=(p**n)/SMO.factorial(n)
             p_0+=(((p**(count+1))/(SMO.factorial(count)*(count-p)))*(1-((p/count)**len)))
             p_0=p_0**(-1)
-        self.ProbablityFault=((p**(count+len))/((count**len)*SMO.factorial(count)))*p_0
+        self.ProbabilityFault=((p**(count+len))/((count**len)*SMO.factorial(count)))*p_0
        
         if (p/n)==1:
                 self.QueueLength=((p*(count+1))/(count*SMO.factorial(count)))*((len*(len+1))/2)*p_0
@@ -135,6 +140,7 @@ class SMO:
         self.ProbabilityFault=(p**(count+len))*((p_0)/((count**len)*SMO.factorial(count)))
         self.SMOTime=self.WaitTime+((1-self.ProbabilityFault)/(self.IntensityService))
         self.AverageChannel=(self.Intensity/self.IntensityService)*(1-self.ProbabilityFault)
+        
     def MultiChannelWithQueueWithoutLen(self, count):
         p=self.Intensity/self.IntensityService
         if (p/count)<1:
@@ -144,7 +150,7 @@ class SMO:
                 p_0+=(p**n)/SMO.factorial(n)
             p_0+=(p**(count+1))/(SMO.factorial(count)*(count-p))
             p_0=p_0**(-1)
-            self.ProbablityQueue=((p**(count+1))/((count-p)*SMO.factorial(count)))*p_0
+            self.ProbabilityQueue=((p**(count+1))/((count-p)*SMO.factorial(count)))*p_0
             self.QueueLength=(count/(count-p))*p_0
             self.WaitTime=self.QueueLength/self.Intensity
             self.AverageChannel=p
@@ -154,7 +160,5 @@ class SMO:
             self.IsStatic=False
     
     def factorial(n):
-        if(n==1):
-            return 1
-        return SMO.factorial(n-1)*n
+        return factorial(n)
 
