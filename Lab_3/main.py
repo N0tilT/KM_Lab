@@ -1,11 +1,13 @@
 
 import SMO as s
+
 def PrintMenu():
     print("*******************")
     print("Меню")
     print("1.Типовые задачи")
     print("2.Своя задача")
     print("0.Выход")
+
 def PrintTask():
     print("*******************")
     print("Задачи")
