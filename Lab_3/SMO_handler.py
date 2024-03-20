@@ -2,9 +2,8 @@ from SMO import *
 
 class SMO_handler:
     
-    def __init__(self,serviceTime, intensity):
-        self.smo = SMO(intensity,serviceTime)
-
+    def __init__(self,serviceTime, intensity, intensityservice=0):
+        self.smo = SMO(intensity,serviceTime, intensityservice)
     def SingleChannelWithFail(self):
         self.smo.SingleChannelWithFail()
         return ("Вероятность обслуживания: " + str(self.smo.ProbabilityService) + "\n" + 
@@ -14,7 +13,7 @@ class SMO_handler:
 
     
         
-    def SingleChannelWithQueue(self, queue_length):
+    def SingleChannelWithQueue(self, queue_length,):
         self.smo.SingleChannelWithQueue(queue_length)
         return ("Вероятность обслуживания: " + str(self.smo.ProbabilityService) + "\n" + 
                 "Вероятность отказа: " + str(self.smo.ProbabilityFault) + "\n" + 

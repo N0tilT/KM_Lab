@@ -128,7 +128,7 @@ class SMOApplication(tk.Tk):
             if m <= 0 or _lambda <= 0 or mu <= 0:  # Дополнительная проверка на положительные значения
                 raise ValueError("Значения должны быть положительными числами.")
             
-            handler = SMO_handler(mu,_lambda)
+            handler = SMO_handler(0,_lambda, mu)
             result = handler.SingleChannelWithQueue(m)
             
             # Обновляем текстовое поле с результатом
@@ -222,7 +222,7 @@ class SMOApplication(tk.Tk):
             if _lambda <= 0 or n <= 0 or mu <= 0:  # Дополнительная проверка на положительные значения
                 raise ValueError("Значения должны быть положительными числами.")
             
-            handler = SMO_handler(mu,_lambda)
+            handler = SMO_handler(0,_lambda,mu)
             result = handler.MultiChannelWithFail(n)
 
             # Обновляем текстовое поле с результатом
@@ -278,7 +278,7 @@ class SMOApplication(tk.Tk):
             if m <= 0 or _lambda <= 0 or mu <= 0 or n <= 0:  # Дополнительная проверка на положительные значения
                 raise ValueError("Значения должны быть положительными числами.")
 
-            handler = SMO_handler(mu,_lambda)
+            handler = SMO_handler(0,_lambda,mu)
             result = handler.MultiChannelWithQueue(n, m)
             
 
@@ -328,7 +328,7 @@ class SMOApplication(tk.Tk):
             if _lambda <= 0 or n <= 0 or mu <= 0:  # Дополнительная проверка на положительные значения
                 raise ValueError("Значения должны быть положительными числами.")
 
-            handler = SMO_handler(mu,_lambda)
+            handler = SMO_handler(0,_lambda,mu)
             result = handler.MultiChannelWithQueueWithoutLen(n)
 
             # Обновляем текстовое поле с результатом

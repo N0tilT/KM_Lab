@@ -52,10 +52,14 @@ class SMO:
         IsStatic
     '''
 
-    def __init__(self,serviceTime, intensity):
+    def __init__(self, intensity, serviceTime, intensityService=0):
+
         self.Intensity=intensity
         self.ServiceTime=serviceTime
-        self.IntensityService=1/self.ServiceTime
+        if intensityService==0:
+            self.IntensityService=1/self.ServiceTime
+        else:
+            self.IntensityService=intensityService
 
     def SingleChannelWithFail(self):
        #Вероятность обслуживания заявки
@@ -76,7 +80,7 @@ class SMO:
             p_0=(1-p)/(1-(p**(len+2)))
        #Вероятность обслуживания заявки
         self.ProbabilityService=self.Intensity/(self.Intensity+self.IntensityService)
-        self.ProbabilityFault=p**(len+1)*p_0
+        self.ProbabilityFault=(p**(len+1))*p_0
         self.RelativeBandwidth=1-self.ProbabilityFault
         self.AverageChannel=self.RelativeBandwidth*self.Intensity
         if p==1:
@@ -106,7 +110,7 @@ class SMO:
         #Вероятность обслуживания заявки
         self.MultIntensity=self.Intensity/self.IntensityService
         p_0=0
-        for n in range(0, ChannelCount):
+        for n in range(0, ChannelCount+1):
             p_0+=(self.MultIntensity**n)/SMO.factorial(n)
         p_0=p_0**(-1)
         self.ProbabilityService=self.Intensity/(self.Intensity+self.IntensityService)
@@ -120,19 +124,19 @@ class SMO:
         
         if (p/count)==1:
             p_0=0
-            for n in range(0, count):
+            for n in range(0, count+1):
                 p_0+=(p**n)/SMO.factorial(n)
-            p_0+=(len*(p**(count+1)))/(SMO.factorial(count)*count)
+            p_0+=(len*(p**(count+1)))/(SMO.factorial(count)*count) 
             p_0=p_0**(-1)
         else:
             p_0=0
-            for n in range(0, count):
+            for n in range(0, count+1):
                 p_0+=(p**n)/SMO.factorial(n)
             p_0+=(((p**(count+1))/(SMO.factorial(count)*(count-p)))*(1-((p/count)**len)))
             p_0=p_0**(-1)
         self.ProbabilityFault=((p**(count+len))/((count**len)*SMO.factorial(count)))*p_0
        
-        if (p/n)==1:
+        if (p/count)==1:
                 self.QueueLength=((p*(count+1))/(count*SMO.factorial(count)))*((len*(len+1))/2)*p_0
         else:
              self.QueueLength=((p*(count+1))/(count*SMO.factorial(count)))*((1-(((p/count)**len)*(len+1-(len*p/count))))/((1-(p/count))**2))*p_0
@@ -146,7 +150,7 @@ class SMO:
         if (p/count)<1:
             self.IsStatic=True
             p_0=0
-            for n in range(0, count):
+            for n in range(0, count+1):
                 p_0+=(p**n)/SMO.factorial(n)
             p_0+=(p**(count+1))/(SMO.factorial(count)*(count-p))
             p_0=p_0**(-1)
@@ -160,5 +164,9 @@ class SMO:
             self.IsStatic=False
     
     def factorial(n):
-        return factorial(n)
+        factorial = 1
+        while n > 1:
+                factorial *= n
+                n -= 1
+        return factorial
 

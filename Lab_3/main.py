@@ -1,5 +1,5 @@
 
-import SMO as s
+'''import SMO as s
 
 def PrintMenu():
     print("*******************")
@@ -39,3 +39,4 @@ while choice!=0:
         case _:
             print("Введите цифру, которая будет соответствовать выбранному вами пункту")
             continue
+'''
