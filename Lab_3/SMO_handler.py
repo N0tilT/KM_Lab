@@ -54,7 +54,7 @@ class SMO_handler:
     def MultiChannelWithQueueWithoutLen(self, channel_count):
         self.smo.MultiChannelWithQueueWithoutLen(channel_count)
         if (self.smo.IsStatic):
-            return ("Вероятность образования очереди: " + "{:2f}".format(self.smo.ProbabilityQueue) + "\n"
+            return ("Вероятность образования очереди: " + str(self.smo.ProbabilityQueue) + "\n"
                     "Среднее время ожидания в очереди: " + "{:2f}".format(self.smo.WaitTime) + "\n" +
                     "Среднее число заявок в СМО: " + "{:2f}".format(self.smo.Lsmo) + "\n" +
                     "Cреднее время нахождения заявки в СМО: " + "{:2f}".format(self.smo.SMOTime) + "\n" +
