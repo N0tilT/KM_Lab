@@ -4,10 +4,10 @@ import simpy
 from SMO_handler import SMO_handler
 
 RANDOM_SEED = 0  # не установлено
-NUM_SERVERS = 10  # Количество серверов
-TIME_CONSUMING = 20  # Обслуживание 1 клиента
-TIME_INTERVAL = 1/0.2  # Время между 2-мя заявками
-SIM_TIME = 100  # Общее время моделирования
+NUM_SERVERS = 3  # Количество серверов
+TIME_CONSUMING = 1  # Обслуживание 1 клиента
+TIME_INTERVAL = 1/0.8  # Время между 2-мя заявками
+SIM_TIME = 1000  # Общее время моделирования
 CLIENT_NUMBER = 0  # Изначально уже занято количество машин
 
 
