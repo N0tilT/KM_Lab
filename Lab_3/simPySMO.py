@@ -4,10 +4,11 @@ import simpy
 from SMO_handler import SMO_handler
 
 RANDOM_SEED = 0  # не установлено
-NUM_SERVERS = 10  # Количество серверов
-TIME_CONSUMING = 20  # Обслуживание 1 клиента
-TIME_INTERVAL = 1/0.2  # Время между 2-мя заявками
-SIM_TIME = 100  # Общее время моделирования
+NUM_SERVERS = 3  # Количество серверов
+TIME_CONSUMING = 5  # Обслуживание 1 клиента
+TIME_INTERVAL = 1/0.8  # Время между 2-мя заявками
+SIM_TIME = 10000  # Общее время моделирования
+QUEUEUE_LENGTH = 10
 CLIENT_NUMBER = 0  # Изначально уже занято количество машин
 
 
@@ -16,22 +17,26 @@ class Server(object):
     Объект, обслуживающий клиентов
     """
 
-    def __init__(self, env, num_servers, consuming_time):
+    def __init__(self, env, num_servers, consuming_time, queue_length):
+        self.cancel_counter = 0
+        self.all_clients = 0
         self.env = env
         self.machine = simpy.Resource(env, num_servers)
         self.consuming_time = consuming_time
         self.allClient = 0
         self.accomplishClient = 0
+        self.queue_length = queue_length
+        self.current_queue_length = 0
+        self.available = True
 
     def serve(self, client):
+        #print(self.current_queue_length)            
         yield self.env.timeout(self.consuming_time)
         self.allClient += 1
         self.accomplishClient += 1
-        print("Количество клиентов, обслуживаемых рабочими станциями:% d. "
-              % (self.allClient))
-
+        #print("Количество клиентов, обслуживаемых рабочими станциями:% d. "
+        #      % (self.allClient))
         yield env.timeout(random.triangular(0.6, 1.5, 0.9))
-
 
 def Client(env, name, cw):
     print('% s обратился с запросом ​​в% .2f.' % (name, env.now))
@@ -39,12 +44,11 @@ def Client(env, name, cw):
         yield request
         print('% s делает запрос в% .2f.' % (name, env.now))
         yield env.process(cw.serve(name))
+        cw.current_queue_length -= 1
         print('% s завершает работу в% .2f.' % (name, env.now))
 
 
-def setup(env, num_servers, consuming_time, t_inter, clientNumber):
-    workstation = Server(env, num_servers, consuming_time)
-
+def setup(env, workstation, t_inter, clientNumber):
     i = 0
     while (i < clientNumber):
         env.process(Client(env, 'Client_%d' % i, workstation))
@@ -52,8 +56,21 @@ def setup(env, num_servers, consuming_time, t_inter, clientNumber):
 
     while True:
         yield env.timeout(t_inter)
-        i += 1
-        env.process(Client(env, 'Client_%d' % i, workstation))
+        if(workstation.current_queue_length > workstation.queue_length):
+            workstation.available = False
+        else:
+            workstation.available = True
+            
+        workstation.all_clients += 1
+        if workstation.available:
+            i += 1
+            workstation.current_queue_length += 1
+            env.process(Client(env, 'Client_%d' % i, workstation))
+        else:
+            print("Отказ")
+            workstation.cancel_counter += 1
+    
+
 
 
 # Инициализировать и запустить задачу симуляции
@@ -64,12 +81,16 @@ random.seed()
 
 # Создайте среду и запустите симуляцию
 env = simpy.Environment()
-env.process(setup(env, NUM_SERVERS, TIME_CONSUMING,
-            TIME_INTERVAL, CLIENT_NUMBER))
+workstation = Server(env, NUM_SERVERS, TIME_CONSUMING,QUEUEUE_LENGTH)
+env.process(setup(env, workstation,TIME_INTERVAL, CLIENT_NUMBER, ))
 
 # Начать исполнение!
 env.run(until=SIM_TIME)
+print("Конец симуляции")
+print("Результаты симуляции. Процент отказов:")
+print(workstation.cancel_counter / workstation.all_clients)
 
+print()
 # Расчёт характеристик СМО
 handler = SMO_handler(TIME_CONSUMING, 1/TIME_INTERVAL)
-print(handler.MultiChannelWithQueueWithoutLen(NUM_SERVERS))
+print(handler.MultiChannelWithQueue(NUM_SERVERS, QUEUEUE_LENGTH))
